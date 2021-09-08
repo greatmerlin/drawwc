@@ -11,6 +11,7 @@ function User(socket) {
 
 Room.prototype.addUser = function(user){
     this.users.push(user);
+    this.handleOnUserMessage(user);
     var room = this;
     // handle user closing
     user.socket.onclose = function(){
@@ -25,6 +26,14 @@ Room.prototype.addUser = function(user){
         this.users.splice(i, 1);
 } }
 };
+
+
+Room.prototype.handleOnUserMessage = function(user) {
+    var room = this;
+    user.socket.on("message", function(message){
+      console.log("Receive message from " + user.id + ": " +
+  message);
+}); };
 
 Room.prototype.sendAll = function(message) {
     for (var i=0, len=this.users.length; i<len; i++) {
