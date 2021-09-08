@@ -11,7 +11,7 @@ function User(socket) {
 
 Room.prototype.addUser = function(user){
     this.users.push(user);
-    this.handleOnUserMessage(user);
+     this.handleOnUserMessage(user);
     var room = this;
     // handle user closing
     user.socket.onclose = function(){
@@ -27,13 +27,22 @@ Room.prototype.addUser = function(user){
 } }
 };
 
-
 Room.prototype.handleOnUserMessage = function(user) {
     var room = this;
-    user.socket.on("message", function(message){
+
+/*     user.socket.on("message", function(message){
       console.log("Receive message from " + user.id + ": " +
   message);
-}); };
+});  */
+user.socket.on("message", function(message){
+    console.log("Receive message from " + user.id + ": " + message);
+    // send to all users in room.
+    var msg = "User " + user.id + " said: " + message;
+    room.sendAll(msg);
+});
+
+
+};
 
 Room.prototype.sendAll = function(message) {
     for (var i=0, len=this.users.length; i<len; i++) {
